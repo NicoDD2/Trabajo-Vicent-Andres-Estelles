@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vicent Andrés Estellés</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         * {
             margin: 0;
@@ -71,18 +72,6 @@
             margin-bottom: 1rem;
         }
 
-        .imagen-ejemplo {
-            width: 100%;
-            height: 200px;
-            background-color: #ddd;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            margin: 1rem 0;
-        }
-
         .poema {
             background-color: #f9f9f9;
             border-left: 4px solid #333;
@@ -109,14 +98,84 @@
             margin-top: 2rem;
         }
 
-        
-
         button:hover {
             background-color: #555;
+        }
+
+        /* ── WIDGETS ── */
+        .widgets-bar {
+            max-width: 1000px;
+            margin: 2rem auto 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1rem;
+        }
+
+        .widget {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .widget h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Reloj */
+        #widget-reloj { text-align: center; }
+        #reloj-hora { font-size: 2.2rem; font-weight: bold; color: #333; letter-spacing: 2px; }
+        #reloj-fecha { font-size: 0.85rem; color: #888; margin-top: 0.3rem; }
+
+        /* Cita */
+        #widget-cita { text-align: center; }
+        #cita-texto { font-style: italic; color: #555; font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.5rem; }
+        #cita-texto::before { content: '«'; }
+        #cita-texto::after  { content: '»'; }
+        #cita-origen { font-size: 0.8rem; color: #999; }
+
+        /* Traductor */
+        #widget-traductor textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+            min-height: 55px;
+        }
+        #widget-traductor textarea:focus { outline: none; border-color: #333; }
+        .traductor-controles { display: flex; align-items: center; gap: 0.5rem; margin: 0.6rem 0; }
+        .traductor-controles select {
+            flex: 1; padding: 0.4rem 0.6rem; border: 1px solid #ddd;
+            border-radius: 5px; font-size: 0.82rem; background: white;
+        }
+        .traductor-btn {
+            background-color: #333; color: white; padding: 0.4rem 1rem;
+            border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;
+        }
+        .traductor-btn:hover { background-color: #555; }
+        #traductor-resultado {
+            background-color: #f9f9f9; border: 1px solid #ddd;
+            border-radius: 5px; padding: 0.6rem; font-size: 0.9rem; min-height: 45px; color: #333;
+        }
+        #traductor-estado { font-size: 0.75rem; color: #999; margin-top: 0.3rem; text-align: right; }
+
+        @media (max-width: 700px) {
+            .widgets-bar { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
     <header>
         <h1>Vicent Andrés Estellés</h1>
         <p>Poeta Valencià (1924-1993)</p>
@@ -128,44 +187,73 @@
         <a href="#poemas">Poemas</a>
     </nav>
 
+    <!-- ══ WIDGETS — van entre </nav> y <main> ══ -->
+    <div class="widgets-bar">
+
+        <div class="widget" id="widget-reloj">
+            <h3>🕐 Hora actual</h3>
+            <div id="reloj-hora">00:00:00</div>
+            <div id="reloj-fecha"></div>
+        </div>
+
+        <div class="widget" id="widget-cita">
+            <h3>✍️ Cita del día</h3>
+            <div id="cita-texto"></div>
+            <div id="cita-origen"></div>
+        </div>
+
+        <div class="widget" id="widget-traductor">
+            <h3>🌐 Traductor Valenciano</h3>
+            <textarea id="traductor-entrada" placeholder="Escribe en castellano..."></textarea>
+            <div class="traductor-controles">
+                <select id="traductor-direccion">
+                    <option value="es-val">Castellano → Valenciano</option>
+                    <option value="val-es">Valenciano → Castellano</option>
+                </select>
+                <button class="traductor-btn" onclick="traducir()">Traducir</button>
+            </div>
+            <div id="traductor-resultado">La traducción aparecerá aquí...</div>
+            <div id="traductor-estado"></div>
+        </div>
+
+    </div>
+    <!-- ══ FIN WIDGETS ══ -->
+
     <main>
         <section id="inicio">
             <h2>Inicio</h2>
             <p>Vicent Andrés Estellés fue uno de los poetas más importantes en lengua catalana del siglo XX. Nacido en Burjassot (València) en 1924, dedicó su vida a la poesía y al periodismo, dejando un legado literario impresionante.</p>
-            
-<img src="https://www.saldonar.com/img/800/800/1037" alt="Vicent Andrés Estellés" style="width: 100%; border-radius: 5px;">
+
+            <img src="https://www.saldonar.com/img/800/800/1037" alt="Vicent Andrés Estellés" style="width: 100%; border-radius: 5px;">
+
             <p>Su obra se caracteriza por un lenguaje directo y cercano, tratando temas como el amor, la memoria histórica, la vida cotidiana y el compromiso con su tierra y su lengua. Es considerado el poeta del País Valencià por excelencia.</p>
-            
+
             <p>A lo largo de su carrera publicó más de cien libros de poesía, convirtiéndose en una figura fundamental de la literatura valenciana contemporánea.</p>
-            
         </section>
 
         <section id="biografia">
             <h2>Biografía</h2>
-            
-            <p>Vicent Andrés Estellés nació el 4 de septiembre de 1924 en Burjassot, un municipio cercano a València. Desde muy joven mostró interés por la literatura y comenzó a escribir poesía.</p>
-            
-            <p>Durante la Guerra Civil Española y la posguerra vivió momentos difíciles que marcaron profundamente su obra. A pesar de las dificultades de escribir en valenciano durante la dictadura franquista, nunca renunció a su lengua materna.</p>
-            
-<img src="https://bibliomil.wordpress.com/wp-content/uploads/2013/03/estelles_jove.jpg" style="width: 100%; border-radius: 5px;">
 
+            <p>Vicent Andrés Estellés nació el 4 de septiembre de 1924 en Burjassot, un municipio cercano a València. Desde muy joven mostró interés por la literatura y comenzó a escribir poesía.</p>
+
+            <p>Durante la Guerra Civil Española y la posguerra vivió momentos difíciles que marcaron profundamente su obra. A pesar de las dificultades de escribir en valenciano durante la dictadura franquista, nunca renunció a su lengua materna.</p>
+
+            <img src="https://bibliomil.wordpress.com/wp-content/uploads/2013/03/estelles_jove.jpg" style="width: 100%; border-radius: 5px;">
 
             <p>En 1950 se casó con Consol Alapont, con quien tuvo cinco hijos. Su esposa fue su gran amor y musa inspiradora, protagonista de muchos de sus poemas más emotivos y apasionados.</p>
-            
+
             <p>Trabajó como periodista durante toda su vida, profesión que influyó en su estilo poético directo y narrativo. Publicó su primer libro "Primera audició" en 1953, iniciando una prolífica carrera literaria.</p>
-            
+
             <p>Entre sus obras más importantes destacan "Llibre de meravelles" (1971), "Mural del País Valencià" (1989) y "Les pedres de l'àmfora" (1959).</p>
-            
-<img src="https://www.uv.es/recursos/fatwirepub/ccurl/264/108/Estelles%20WEB.png" style="width: 100%; border-radius: 5px;">
 
+            <img src="https://www.uv.es/recursos/fatwirepub/ccurl/264/108/Estelles%20WEB.png" style="width: 100%; border-radius: 5px;">
 
-            
             <p>Recibió numerosos premios y reconocimientos, incluyendo el Premio de Honor de las Letras Catalanas en 1989. Falleció en València el 27 de marzo de 1993, dejando un legado imborrable en la literatura valenciana.</p>
         </section>
 
         <section id="poemas">
             <h2>Poemas</h2>
-            
+
             <div class="poema">
                 <h3>Coral Romput</h3>
                 <p>I era com si un gran fred s'acostara.</p>
@@ -177,9 +265,8 @@
                 <p>per aquí. I callara. I era un mot, cavall,</p>
                 <p>àlber o mur, era dit pel meu pare.</p>
             </div>
-            
-            <p>Este poema pertenece a una de sus obras más conocidas y reflexiona sobre la identidad, la patria y la lengua. Es un ejemplo perfecto del estilo de Estellés: directo, emotivo y profundamente arraigado en su experiencia personal y colectiva.</p>
-            
+
+            <p>Este poema reflexiona sobre la identidad, la patria y la lengua. Es un ejemplo perfecto del estilo de Estellés: directo, emotivo y profundamente arraigado en su experiencia personal y colectiva.</p>
 
             <div class="poema">
                 <h3>De "Les pedres de l'àmfora"</h3>
@@ -187,13 +274,13 @@
                 <p>acaronaven coses i, acaronant-les,</p>
                 <p>les coses s'il·luminaven totes</p>
                 <p>i adquirien, les coses, sentit.</p>
-                <p></p>
+                <p>&nbsp;</p>
                 <p>Les teues mans petites i precioses</p>
                 <p>em van acaronar el cos i l'ànima</p>
                 <p>i em van il·luminar tot sencer</p>
                 <p>i em van donar, també a mi, sentit.</p>
             </div>
-            
+
             <p>Este poema forma parte de su obra amorosa dedicada a su esposa Consol. Muestra la capacidad de Estellés para expresar el amor y la ternura con un lenguaje sencillo pero profundamente emotivo.</p>
         </section>
     </main>
@@ -201,5 +288,7 @@
     <footer>
         <p>&copy; 2026 Vicent Andrés Estellés. niconavarrorico@gmail.com</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
